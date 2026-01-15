@@ -1,121 +1,98 @@
-# Peppol-Viewer
+# Peppol-Html
 
-A .NET console application for converting Peppol UBL Invoice and Credit Note XML documents to human-readable HTML format using [XSLT stylesheets](https://github.com/pellea/unimaze-peppol-stylesheets).
+A Blazor WebAssembly application for viewing and printing Peppol BIS Billing 3.0 electronic invoices and credit notes.
 
 ## Overview
 
-Peppol-Viewer transforms Peppol compliant XML invoices and credit notes into styled HTML documents that can be viewed in any web browser. The application uses XSLT transformation with support for multiple languages.
+Peppol-Html is a client-side web application that renders UBL 2.1 XML invoices and credit notes into a human-readable HTML format using XSLT transformations. The application runs entirely in the browser using WebAssembly, ensuring privacy as no data is sent to any server.
 
-## Requirements
+## Features
 
-- .NET 10.0 SDK or later
-- Windows, Linux, or macOS
+- 📄 **Open XML Files** - Load Peppol BIS EN16931 invoices and credit notes (UBL 2.1 format)
+- 🖨️ **Print Support** - Print rendered invoices directly from the browser
+- 🌍 **Multi-language Support** - Supports multiple languages including English, Swedish, Polish, Icelandic, and Serbian
+- 🔒 **Privacy-First** - All processing happens locally in your browser
+- ⚡ **No Installation Required** - Runs directly in any modern web browser
 
-## Building the Project
+## Technology Stack
+
+- [.NET 10](https://dotnet.microsoft.com/) - Runtime framework
+- [Blazor WebAssembly](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor) - Client-side web framework
+- [Fluent UI Blazor](https://www.fluentui-blazor.net/) - Microsoft Fluent Design components
+- XSLT 1.0 - XML transformation for rendering invoices
+
+## Getting Started
+
+### Prerequisites
+
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) or later
+
+### Running Locally
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/Peppol-Html.git
+   cd Peppol-Html
+   ```
+
+2. Navigate to the project folder:
+   ```bash
+   cd PeppolWasm
+   ```
+
+3. Run the application:
+   ```bash
+   dotnet run
+   ```
+
+4. Open your browser and navigate to `https://localhost:5001` (or the URL shown in the terminal)
+
+### Building for Production
 
 ```bash
-# Clone or navigate to the project directory
-cd Peppol-Viewer
-
-# Build the project
-dotnet build
+dotnet publish -c Release
 ```
+
+The published files will be in `PeppolWasm/bin/publish/wwwroot/`.
 
 ## Usage
 
-### Command Line
+1. Click the **Ouvrir** (Open) button to select a Peppol XML invoice or credit note file
+2. The document will be rendered in a human-readable format
+3. Click the **Imprimer** (Print) button to print the rendered document
 
-```bash
-# Basic usage - converts XML to HTML
-dotnet run -- <path-to-xml-file>
+## Supported Document Types
 
-# Or use the compiled executable
-Peppol-Viewer.exe <path-to-xml-file>
-```
-
-### Example
-
-```bash
-# Convert a Peppol invoice XML to HTML
-dotnet run -- c8d0172f-9c79-4f81-acf3-666d5e69d942.xml
-```
-
-The output HTML file will be saved in the same directory as the input XML file, with a `.html` extension.
-
-## Programmatic Usage
-
-You can also use the `PeppolConverter` class directly in your .NET projects:
-
-```csharp
-using Peppol_Viewer;
-
-// Convert XML to HTML file
-PeppolConverter.ConvertXmlToHtml(
-    xmlFilePath: "invoice.xml",
-    xsltFilePath: "Stylesheets/render-billing-3.xsl",
-    outputHtmlPath: "invoice.html",
-    languageCode: "en"  // Optional: defaults to "en"
-);
-
-// Or get HTML as a string
-string htmlContent = PeppolConverter.ConvertXmlToHtmlString(
-    xmlFilePath: "invoice.xml",
-    xsltFilePath: "Stylesheets/render-billing-3.xsl",
-    languageCode: "en"
-);
-```
-
-## Supported Languages
-
-The viewer supports multiple languages for document labels and descriptions:
-
-| Code | Language   |
-|------|------------|
-| `en` | English    |
-| `is` | Icelandic  |
-| `pl` | Polish     |
-| `se` | Swedish    |
-| `sr` | Serbian    |
+- **Invoices** - UBL 2.1 Invoice documents conforming to Peppol BIS Billing 3.0
+- **Credit Notes** - UBL 2.1 Credit Note documents conforming to Peppol BIS Billing 3.0
 
 ## Project Structure
 
 ```
-Peppol-Viewer/
-├── Program.cs                    # Main application and PeppolConverter class
-├── Peppol-Viewer.csproj          # Project file
-├── Peppol-Viewer.sln             # Solution file
-├── README.md                     # This file
-└── Stylesheets/
-    ├── render-billing-3.xsl      # Main XSLT stylesheet for invoices
-    ├── billing-3/                # Billing-specific templates and translations
-    │   ├── CommonTemplates.xsl   # Shared XSLT templates
-    │   ├── Headlines-BT_*.xml    # Headline translations
-    │   └── UBLInvoiceBaseType_*.xml  # Invoice type translations
-    ├── common/                   # Common code lists and translations
-    │   ├── UNCL*.xml             # UN/CEFACT code lists
-    │   ├── UBL*.xml              # UBL code lists
-    │   └── user_config.xsl       # User configuration
-    └── procurement/              # Order-related stylesheets
-        └── render-order.xsl      # Order rendering stylesheet
+Peppol-Html/
+├── PeppolWasm/                    # Blazor WebAssembly project
+│   ├── Pages/                     # Razor pages
+│   ├── Layout/                    # Layout components
+│   └── wwwroot/                   # Static assets
+│       ├── render-billing-3.xsl   # Main XSLT stylesheet
+│       ├── billing-3/             # Billing-specific templates and translations
+│       ├── common/                # Common code lists and translations
+│       └── procurement/           # Procurement-related files
+└── README.md
 ```
 
-## Features
+## XSLT Credits
 
-- **Peppol BIS Billing 3.0 Support**: Handles both Invoice and Credit Note document types
-- **Multi-language Support**: Localized labels and descriptions in 5 languages
-- **Responsive HTML Output**: Generated HTML is styled for readability
-- **Code List Resolution**: Automatically resolves UN/CEFACT and UBL code values to human-readable descriptions
-
-## Troubleshooting
-
-### Common Issues
-
-1. **"XSLT file not found"**: Ensure the `Stylesheets` folder is in the correct location relative to the executable or working directory.
-
-2. **"XML file not found"**: Verify the path to your Peppol XML document is correct.
-
-3. **Transformation errors**: Ensure your XML document is a valid Peppol BIS Billing 3.0 Invoice or Credit Note.
+The XSLT stylesheets are based on [UniStyles](https://github.com/nickyuy/UBL-Invoice-XSLT) by Unimaze Software, licensed under the Apache License 2.0.
 
 ## License
 
-This project includes XSLT stylesheets for rendering Peppol documents. Please refer to the original Peppol BIS Billing 3.0 documentation for licensing information regarding the stylesheets.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Author
+
+Denis Voituron
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.

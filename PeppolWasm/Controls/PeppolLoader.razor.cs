@@ -20,21 +20,7 @@ public partial class PeppolLoader
       // Read the XML content
       var xmlContent = await File.ReadAllTextAsync(file.LocalFile.FullName);
       
-      // Add the stylesheet reference after the XML declaration
-      const string xmlDeclaration = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-      const string stylesheetRef = "<?xml-stylesheet type=\"text/xsl\" href=\"render-billing-3.xsl\"?>";
-      
-      if (xmlContent.Contains(xmlDeclaration))
-      {
-        xmlContent = xmlContent.Replace(xmlDeclaration, $"{xmlDeclaration}\n{stylesheetRef}");
-      }
-      else
-      {
-        // If no XML declaration, add both at the beginning
-        xmlContent = $"{xmlDeclaration}\n{stylesheetRef}\n{xmlContent}";
-      }
-
-      // Store the content and navigate to the converted page
+      // Apply XSLT transformation and render in iframe
       await JSRuntime.InvokeVoidAsync("renderXmlContent", xmlContent);
     }      
 

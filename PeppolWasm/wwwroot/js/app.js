@@ -3,47 +3,35 @@ async function renderXmlContent(xmlContent, xsltPath = '/render-billing-3.xsl') 
   if (!iframe) return;
 
   try {
-    // Parse the XML content
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlContent, 'application/xml');
+    // Build the absolute URL for the XSLT
+    const xsltAbsoluteUrl = new URL(xsltPath, window.location.href).href;
     
-    // Check for XML parsing errors
-    const parseError = xmlDoc.querySelector('parsererror');
-    if (parseError) {
-      console.error('XML parsing error:', parseError.textContent);
-      return;
-    }
-
-    // Fetch the XSLT stylesheet
-    const xsltResponse = await fetch(xsltPath);
-    if (!xsltResponse.ok) {
-      console.error('Failed to fetch XSLT:', xsltResponse.statusText);
-      return;
-    }
-    const xsltText = await xsltResponse.text();
-    const xsltDoc = parser.parseFromString(xsltText, 'application/xml');
-
-    // Check for XSLT parsing errors
-    const xsltParseError = xsltDoc.querySelector('parsererror');
-    if (xsltParseError) {
-      console.error('XSLT parsing error:', xsltParseError.textContent);
-      return;
-    }
-
-    // Create XSLT processor and apply transformation
-    const xsltProcessor = new XSLTProcessor();
-    xsltProcessor.importStylesheet(xsltDoc);
+    // Add or update the xml-stylesheet processing instruction
+    // This allows the browser to natively process the XSLT with proper document() resolution
+    let processedXml = xmlContent.trim();
     
-    const resultDoc = xsltProcessor.transformToDocument(xmlDoc);
+    // Remove any existing xml-stylesheet processing instructions
+    processedXml = processedXml.replace(/<\?xml-stylesheet[^?]*\?>\s*/g, '');
     
-    // Serialize the result to HTML string
-    const serializer = new XMLSerializer();
-    const htmlContent = serializer.serializeToString(resultDoc);
-
-    // Write the transformed HTML to the iframe
-    const blob = new Blob([htmlContent], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    iframe.src = url;
+    // Find the position after the XML declaration (if present)
+    const xmlDeclMatch = processedXml.match(/^<\?xml[^?]*\?>\s*/);
+    let insertPosition = 0;
+    if (xmlDeclMatch) {
+      insertPosition = xmlDeclMatch[0].length;
+    }
+    
+    // Insert the xml-stylesheet processing instruction pointing to our XSLT
+    const stylesheetPI = `<?xml-stylesheet type="text/xsl" href="${xsltAbsoluteUrl}"?>\n`;
+    processedXml = processedXml.substring(0, insertPosition) + stylesheetPI + processedXml.substring(insertPosition);
+    
+    // Create a Blob URL for the XML content
+    // The blob URL will be same-origin, allowing the XSLT to load document() resources
+    const blob = new Blob([processedXml], { type: 'application/xml' });
+    const blobUrl = URL.createObjectURL(blob);
+    
+    // Set the iframe source to the blob URL
+    // The browser will apply the XSLT transformation with proper document() resolution
+    iframe.src = blobUrl;
     
   } catch (error) {
     console.error('XSLT transformation error:', error);

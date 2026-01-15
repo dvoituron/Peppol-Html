@@ -1,7 +1,6 @@
 <FluentInputFile Id="my-file-uploader"
                  Mode="InputFileMode.SaveToTemporaryFolder"
                  Accept="*.xml"
-                 @bind-ProgressPercent="@ProgressPercent"
                  OnCompleted="@OnCompletedAsync"
                  Height="200px">
     <ChildContent>
@@ -32,3 +31,5 @@
         }
     </ul>
 }
+
+<iframe id="xmlFrame" style="width: 100%; height: 100vh; border: none;"></iframe>

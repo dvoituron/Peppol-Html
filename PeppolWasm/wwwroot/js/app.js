@@ -49,3 +49,22 @@ async function renderXmlContent(xmlContent, xsltPath = '/render-billing-3.xsl') 
     console.error('XSLT transformation error:', error);
   }
 }
+
+function printXmlFrame() {
+  const iframe = document.getElementById('xmlFrame');
+  if (!iframe) return;
+
+  try {
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+  } catch (error) {
+    console.error('Print error:', error);
+  }
+}
+
+function attachPrintButtonHandler() {
+  const printButton = document.getElementById('PrintButton');
+  if (printButton) {
+    printButton.addEventListener('click', printXmlFrame);
+  }
+}

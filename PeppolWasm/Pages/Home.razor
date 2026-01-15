@@ -2,4 +2,27 @@
 
 <PageTitle>Peppol</PageTitle>
 
-<PeppolLoader />
+<!-- Header -->
+<FluentLayoutItem Area="@LayoutArea.Header">
+  <FluentStack VerticalAlignment="VerticalAlignment.Center">
+    <FluentText Weight="TextWeight.Bold" Size="TextSize.Size400">
+      Peppol
+    </FluentText>
+
+    <FluentSpacer />
+
+    <FluentButton Id="UploadButton" Appearance="ButtonAppearance.Default">
+      Ouvrir
+    </FluentButton>
+
+    <FluentButton Id="PrintButton" Appearance="ButtonAppearance.Default">
+      Imprimer
+    </FluentButton>
+
+  </FluentStack>
+</FluentLayoutItem>
+
+<!-- Content -->
+<FluentLayoutItem Area="@LayoutArea.Content">
+  <iframe id="xmlFrame" style="background-color: white; width: 100%; height: calc(var(--layout-body-height) - 10px); border: none;"></iframe>
+</FluentLayoutItem>

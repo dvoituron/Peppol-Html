@@ -1,0 +1,27 @@
+﻿@inherits LayoutComponentBase
+
+<FluentLayout>
+
+    <!-- Header -->
+    <FluentLayoutItem Area="@LayoutArea.Header">
+        <FluentStack VerticalAlignment="VerticalAlignment.Center">
+            <FluentText Weight="TextWeight.Bold" Size="TextSize.Size400">
+                Peppol Viewer
+            </FluentText>
+        </FluentStack>
+    </FluentLayoutItem>
+
+    <!-- Content -->
+    <FluentLayoutItem Area="@LayoutArea.Content" Padding="@Padding.All3">
+        @Body
+    </FluentLayoutItem>
+
+    <!-- Footer -->
+    <FluentLayoutItem Area="@LayoutArea.Footer">
+        &copy; Denis Voituron @DateTime.Now.Year
+    </FluentLayoutItem>
+
+</FluentLayout>
+
+@* Add all FluentUI Blazor Providers *@
+<FluentProviders />

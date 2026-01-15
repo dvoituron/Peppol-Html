@@ -1,5 +1,6 @@
 <FluentInputFile Id="my-file-uploader"
                  Mode="InputFileMode.SaveToTemporaryFolder"
+                 @bind-ProgressPercent="@Percentage"
                  Accept="*.xml"
                  OnCompleted="@OnCompletedAsync"
                  Height="200px">
@@ -14,22 +15,5 @@
         </div>
     </ChildContent>
 </FluentInputFile>
-
-@if (Files.Any())
-{
-    <h4>File(s) uploaded:</h4>
-    <ul>
-        @foreach (var file in Files)
-        {
-            <li>
-                <b>@file.Name</b> 🔹
-                @($"{FileSizeConverter.ToKiloBytes(file.Size):N} KB") 🔹
-                @file.ContentType 🔹
-                @file.LocalFile?.FullName
-                @file.ErrorMessage
-            </li>
-        }
-    </ul>
-}
 
 <iframe id="xmlFrame" style="width: 100%; height: 100vh; border: none;"></iframe>

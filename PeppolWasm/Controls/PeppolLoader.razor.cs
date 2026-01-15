@@ -6,10 +6,10 @@ namespace PeppolWasm.Controls;
 
 public partial class PeppolLoader
 {
-  private FluentInputFileEventArgs[] Files = [];
-
   [Inject]
   private IJSRuntime JSRuntime { get; set; } = default!;
+
+  private int Percentage { get; set; }
 
   private async Task OnCompletedAsync(IEnumerable<FluentInputFileEventArgs> files)
   {
@@ -37,5 +37,7 @@ public partial class PeppolLoader
       // Store the content and navigate to the converted page
       await JSRuntime.InvokeVoidAsync("renderXmlContent", xmlContent);
     }      
+
+    Percentage = 0;
   }
 }

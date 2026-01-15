@@ -10,8 +10,6 @@ public partial class PeppolLoader
   private async Task OnCompletedAsync(IEnumerable<FluentInputFileEventArgs> files)
   {
     var file = files.FirstOrDefault();
-    ProgressPercent = 0;
-
-    
+    ProgressPercent = 0;    
   }
 }
